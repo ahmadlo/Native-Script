@@ -6,13 +6,14 @@ var password;
 /* frame module : pour la navigation entre les différentes pages */
 var frameModule=require("ui/frame");
 
-// view model
-var Observable=require("data/observable").Observable;
+// dialog module
+var dialogsModule=require("ui/dialogs");
 
-// ajout d'un utilisateur
-var user=new Observable({
-    email:"ahmadou19@gmail.com",
-    password:"Passer@1"
+// user view model from shared
+var UserViewModel = require("../../shared/view-models/user-view-model");
+var user=new UserViewModel({
+    email: "user@nativescript.org",
+    password: "password"
 });
 exports.loaded=function (args) {
     page=args.object
@@ -21,10 +22,27 @@ exports.loaded=function (args) {
 }
 
 exports.signIn=function () {
-    email=page.getViewById("email");
+
+    // new sign-in
+    user.login()
+        .catch(function (error) {
+            console.log("errosrs", error);
+            dialogsModule.alert({
+                message:"Bad Email or Passord",
+                okButtonText:"ok"
+            });
+            return Promise.reject();
+
+        })
+        .then(function () {
+            frameModule.topmost().navigate("views/list/list");
+        });
+
+
+    /*email=page.getViewById("email");
     password=page.getViewById("password");
     console.log('email',email.text);
-    console.log("password ",password.text);
+    console.log("password ",password.text);*/
     //alert("this is the sign in function ",email.text);
 }
 
