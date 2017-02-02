@@ -17,6 +17,10 @@ var user=new UserViewModel({
 });
 exports.loaded=function (args) {
     page=args.object
+    if (page.ios) {
+        var navigationBar = frameModule.topmost().ios.controller.navigationBar;
+        navigationBar.barStyle = UIBarStyle.UIBarStyleBlack;
+    }
     page.bindingContext=user;
     console.log('app is loading.....',page);
 }

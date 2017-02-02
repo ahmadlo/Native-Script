@@ -5,6 +5,9 @@ var page;
 // social share
 var socialShare = require("nativescript-social-share");
 
+// swipe delete for ios
+var swipeDelete = require("../../shared/utils/ios-swipe-delete");
+
 // get the list view model
 var GroceryListViewModel = require("../../shared/view-models/grocery-list-view-model");
 var groceryList=new GroceryListViewModel([]);
@@ -15,6 +18,12 @@ var pageData = new observableModule.fromObject({
 
 exports.loaded = function(args) {
     page = args.object;
+    if (page.ios) {
+        var listView = page.getViewById("groceryList");
+        swipeDelete.enable(listView, function(index) {
+            groceryList.delete(index);
+        });
+    }
     page.bindingContext = pageData;
     // init groceryList;
     var listView=page.getViewById("groceryList")
@@ -61,4 +70,12 @@ exports.share = function() {
     }
     var listString = list.join(", ").trim();
     socialShare.shareText(listString);
+};
+
+exports.delete = function(args) {
+    var item = args.view.bindingContext;
+    var index = groceryList.indexOf(item);
+    console.log("item ",item)
+    console.log(" index ",index)
+    groceryList.delete(index);
 };
