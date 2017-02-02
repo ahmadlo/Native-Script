@@ -18,7 +18,7 @@ function completeRegistration() {
                     frameModule.topmost().navigate("views/login/login");
                 });
         }).catch(function(error) {
-            console.log(error);
+            console.log("register ",error);
             dialogsModule
                 .alert({
                     message: "Unfortunately we were unable to create your account.",

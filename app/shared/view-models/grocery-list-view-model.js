@@ -5,7 +5,7 @@ var ObservableArray = require("data/observable-array").ObservableArray;
 function GroceryListViewModel(items) {
     var viewModel = new ObservableArray(items);
     viewModel.load = function() {
-        return fetch(config.apiUrl + "Groceries", {
+        return fetch(config.apiUrl + "grocerylist", {
             headers: {
                 "Authorization": "Bearer " + config.token
             }
@@ -16,8 +16,8 @@ function GroceryListViewModel(items) {
             }).then(function(data) {
                 data.Result.forEach(function(grocery) {
                     viewModel.push({
-                        name: grocery.Name,
-                        id: grocery.Id
+                        name: grocery.name,
+                        id: grocery.id
                     });
                 });
             });

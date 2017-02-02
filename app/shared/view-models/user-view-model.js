@@ -14,25 +14,33 @@ function User(info) {
     });
 
     viewModel.register = function() {
-        return fetchModule.fetch(config.apiUrl + "Users", {
+        return fetchModule.fetch(config.apiUrl + "user", {
             method: "POST",
             body: JSON.stringify({
-                Username: viewModel.get("email"),
-                Email: viewModel.get("email"),
-                Password: viewModel.get("password")
+
+                email: viewModel.get("email"),
+                password: viewModel.get("password")
             }),
             headers: {
                 "Content-Type": "application/json"
             }
-        }).then(handleErrors);
+        }).then(handleErrors)
+            .then(function(response) {
+                console.log('response ',response)
+                return response.json();
+            })
+            .then(function(data) {
+                console.log('login ',data)
+                //config.token = data.Result.access_token;
+            });
     };
     viewModel.login = function() {
-        return fetchModule.fetch(config.apiUrl + "oauth/token", {
+        return fetchModule.fetch(config.apiUrl + "user/login", {
             method: "POST",
             body: JSON.stringify({
-                username: viewModel.get("email"),
-                password: viewModel.get("password"),
-                grant_type: "password"
+                email: viewModel.get("email"),
+                password: viewModel.get("password")
+
             }),
             headers: {
                 "Content-Type": "application/json"
@@ -43,6 +51,7 @@ function User(info) {
                 return response.json();
             })
             .then(function(data) {
+                console.log('login ',data)
                 config.token = data.Result.access_token;
             });
     };
@@ -56,8 +65,8 @@ function User(info) {
 
 function handleErrors(response) {
     if (!response.ok) {
-        console.log("erreurs",JSON.stringify(response));
-        throw Error(response.statusText);
+        console.log("erreurs ",JSON.stringify(response));
+        throw Error(response);
     }
     return response;
 }
